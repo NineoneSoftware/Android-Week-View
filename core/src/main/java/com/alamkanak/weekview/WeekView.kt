@@ -82,10 +82,18 @@ class WeekView @JvmOverloads constructor(
         eventChipsCacheProvider = eventChipsCacheProvider
     )
 
-    private val renderers: List<Renderer> = listOf(
+    private val renderers: List<Renderer> = if (viewState.isHeaderShown) listOf(
         TimeColumnRenderer(viewState),
         CalendarRenderer(viewState, eventChipsCacheProvider),
-        HeaderRenderer(context, viewState, eventChipsCacheProvider, onHeaderHeightChanged = this::invalidate)
+        HeaderRenderer(
+            context,
+            viewState,
+            eventChipsCacheProvider,
+            onHeaderHeightChanged = this::invalidate
+        )
+    ) else listOf(
+        TimeColumnRenderer(viewState),
+        CalendarRenderer(viewState, eventChipsCacheProvider)
     )
 
     // We use width and height instead of view.isLaidOut(), because the latter seems to
@@ -271,6 +279,22 @@ class WeekView @JvmOverloads constructor(
         get() = viewState.stickToActualWeek
         set(value) {
             viewState.stickToActualWeek = value
+        }
+
+    @PublicApi
+    var isHeaderShown: Boolean
+        get() = viewState.isHeaderShown
+        set(value) {
+            viewState.isHeaderShown = value
+            invalidate()
+        }
+
+    @PublicApi
+    var headerHeight: Int
+        get() = viewState.headerHeight.roundToInt()
+        set(value) {
+            viewState.headerHeight = value.toFloat()
+            invalidate()
         }
 
     /**

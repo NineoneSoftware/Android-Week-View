@@ -123,6 +123,8 @@ internal class ViewState {
 
     var headerHeight: Float = 0f
 
+    var isHeaderShown: Boolean = true
+
     var currentAllDayEventHeight: Int = 0
 
     var maxNumberOfAllDayEvents: Int = 0
